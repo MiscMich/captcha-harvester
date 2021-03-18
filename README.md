@@ -11,3 +11,8 @@ Then you can create a CaptchaWindow object (it will automatically show unless yo
 ```java
 final CaptchaWindow captchaWindow = captchaHarvester.createWindow();
 ```
+
+Getting Captcha Tokens
+```java
+final List<CaptchaToken> tokens = CaptchaManager.getCaptchaTokens();
+```
