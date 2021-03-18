@@ -26,11 +26,15 @@ public class CaptchaHarvester {
         new WebAPP().start();
     }
 
+    public CaptchaWindow createWindow() {
+        return createWindow(true);
+    }
+    
     /**
      * Creates a new Captcha window
      * @return new CaptchaWindow object
      */
-    public CaptchaWindow createWindow() {
+    public CaptchaWindow createWindow(boolean show) {
         System.setProperty("java.awt.headless", "false");
 
         final JFrame frame = new JFrame("KiteAIO Harvester");
@@ -50,7 +54,9 @@ public class CaptchaHarvester {
             engine.load("https://kith.com/checkpoint");
         });
 
-        frame.setVisible(true);
+        if(show) {
+            frame.setVisible(true);
+        }
 
         return new CaptchaWindow(frame, getDomain(), getSiteKey());
     }
