@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Captcha Harvester</title>
+</head>
+<body>
+<p>KiteAIO Harvester</p>
+
+<div class="g-recaptcha" th:attr="data-sitekey=''+${siteKey}+''" data-callback="submitToken"></div>
+
+<script type="text/javascript" src="https://www.google.com/recaptcha/api.js"></script>
+
+<script>
+    function submitToken() {
+        (async () => {
+            const rawResponse = await fetch("add", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    recaptcha_token: grecaptcha.getResponse()
+                })
+            });
+            const content = await rawResponse.json();
+
+            if(content.status) {
+                location.reload();
+
+                grecaptcha.reset()
+            } else {
+                alert("Failed to add recaptcha!");
+            }
+        }) ();
+    }
+</script>
+</body>
+</html>

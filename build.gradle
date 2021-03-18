@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'org.springframework.boot' version '2.3.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+}
+
+group 'com.kiteaio'
+version '1.0'
+
+sourceCompatibility = JavaVersion.VERSION_14
+targetCompatibility = JavaVersion.VERSION_14
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    shaded
+
+    compile.extendsFrom shaded
+}
+
+dependencies {
+    shaded 'com.google.code.gson:gson:+'
+    shaded 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    shaded 'org.springframework.boot:spring-boot-starter-web'
+    shaded 'org.seleniumhq.selenium:selenium-java:+'
+
+    shaded group: 'org.openjfx', name: 'javafx-base', version: '15', classifier: 'win'
+    shaded group: 'org.openjfx', name: 'javafx-controls', version: '15', classifier: 'win'
+    shaded group: 'org.openjfx', name: 'javafx-fxml', version: '15', classifier: 'win'
+    shaded group: 'org.openjfx', name: 'javafx-graphics', version: '15', classifier: 'win'
+    shaded group: 'org.openjfx', name: 'javafx-media', version: '15', classifier: 'win'
+    shaded group: 'org.openjfx', name: 'javafx-swing', version: '15', classifier: 'win'
+    shaded group: 'org.openjfx', name: 'javafx-web', version: '15', classifier: 'win'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shaded]
+}
+
+build {
+    dependsOn shadowJar
+}
