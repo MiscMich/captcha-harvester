@@ -3,6 +3,8 @@ package com.kiteaio.captcha.models;
 import org.openqa.selenium.json.Json;
 
 import javax.swing.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author Brennan
@@ -10,16 +12,23 @@ import javax.swing.*;
  **/
 public class CaptchaWindow {
     private final JFrame jFrame;
-    private final String domain, siteKey;
+    private final String domain, siteKey, uuid;
 
-    public CaptchaWindow(JFrame jFrame, String domain, String siteKey) {
+    private final List<CaptchaToken> captchaTokens = new LinkedList<>();
+
+    public CaptchaWindow(JFrame jFrame, String domain, String siteKey, String uuid) {
         this.jFrame = jFrame;
         this.domain = domain;
         this.siteKey = siteKey;
+        this.uuid = uuid;
     }
 
     public void close() {
         jFrame.setVisible(false);
+    }
+
+    public String getUuid() {
+        return uuid;
     }
 
     public String getSiteKey() {
@@ -30,7 +39,15 @@ public class CaptchaWindow {
         return domain;
     }
 
-    public JFrame getjFrame() {
+    public JFrame getJFrame() {
         return jFrame;
+    }
+
+    public void addToken(CaptchaToken captchaToken) {
+        this.captchaTokens.add(captchaToken);
+    }
+
+    public List<CaptchaToken> getCaptchaTokens() {
+        return captchaTokens;
     }
 }

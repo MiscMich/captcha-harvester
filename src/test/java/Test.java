@@ -8,10 +8,11 @@ import com.kiteaio.captcha.models.CaptchaWindow;
 public class Test {
 
     public static void main(String[] args) {
-        final CaptchaHarvester captchaHarvester = new CaptchaHarvester("", "");
+        final CaptchaHarvester captchaHarvester = new CaptchaHarvester("", "dasdasd", 80);
 
         final CaptchaWindow captchaWindow = captchaHarvester.createWindow();
 
+        captchaWindow.getCaptchaTokens().forEach(token -> System.out.println(token.getToken() + " " + token.getTimestamp()));
     }
 
 }

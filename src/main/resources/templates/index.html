@@ -5,13 +5,16 @@
     <title>Captcha Harvester</title>
 </head>
 <body>
-<p>KiteAIO Harvester</p>
 
 <div class="g-recaptcha" th:attr="data-sitekey=''+${siteKey}+''" data-callback="submitToken"></div>
 
 <script type="text/javascript" src="https://www.google.com/recaptcha/api.js"></script>
 
 <script>
+    const params = new URLSearchParams(window.location.search);
+
+    const uuid = params.get("uuid");
+
     function submitToken() {
         (async () => {
             const rawResponse = await fetch("add", {
@@ -20,7 +23,8 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    recaptcha_token: grecaptcha.getResponse()
+                    recaptcha_token: grecaptcha.getResponse(),
+                    uuid: uuid
                 })
             });
             const content = await rawResponse.json();

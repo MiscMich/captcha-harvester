@@ -1,9 +1,9 @@
 package com.kiteaio.captcha.webapp.controllers;
 
 import com.google.gson.JsonObject;
-import com.kiteaio.captcha.CaptchaManager;
 import com.kiteaio.captcha.Context;
 import com.kiteaio.captcha.models.CaptchaToken;
+import com.kiteaio.captcha.models.CaptchaWindow;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,13 +33,24 @@ public class MainController {
         final JsonObject responseObject = new JsonObject();
         HttpStatus httpStatus = HttpStatus.OK;
 
-        if(jsonObject.has("recaptcha_token")) {
-            final CaptchaToken captchaToken = new CaptchaToken(jsonObject.get("recaptcha_token").getAsString(), Instant.now().getEpochSecond());
+        if(jsonObject.has("recaptcha_token") && jsonObject.has("uuid")) {
+            final CaptchaWindow captchaWindow = Context.getWindow(jsonObject.get("uuid").getAsString());
+            if(captchaWindow != null) {
+                final CaptchaToken captchaToken = new CaptchaToken(jsonObject.get("recaptcha_token").getAsString(), Instant.now().getEpochSecond());
 
-            CaptchaManager.add(captchaToken);
+                captchaWindow.addToken(captchaToken);
 
-            responseObject.addProperty("status", true);
-            responseObject.addProperty("message", "Added captcha!");
+                responseObject.addProperty("status", true);
+                responseObject.addProperty("message", "Added captcha");
+
+                captchaWindow.close();
+            } else {
+                responseObject.addProperty("status", false);
+                responseObject.addProperty("message", "Window turned up null");
+            }
+        } else {
+            responseObject.addProperty("status", false);
+            responseObject.addProperty("message", "Malformed object");
         }
 
         return ResponseEntity
